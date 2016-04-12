@@ -63,6 +63,10 @@ public:
 #if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT)
         , m_verticalEdgeEffectTexture(0)
         , m_horizontalEdgeEffectTexture(0)
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+        , m_edgeEffectTexture(0)
+        , m_textureIndex(0)
+#endif
         , m_verticalEdgeEffectType(EdgeEffectTypeNone)
         , m_horizontalEdgeEffectType(EdgeEffectTypeNone)
 #endif
@@ -92,6 +96,10 @@ public:
 #if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT)
     void setVerticalEdgeEffectTexture(BitmapTexture* edgeEffectTexture) { m_verticalEdgeEffectTexture = edgeEffectTexture; }
     void setHorizontalEdgeEffectTexture(BitmapTexture* edgeEffectTexture) { m_horizontalEdgeEffectTexture = edgeEffectTexture; }
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+    void setEdgeEffectTexture(BitmapTexture* edgeEffectTexture) { m_edgeEffectTexture = edgeEffectTexture; }
+    void setTextureIndex(int index) { m_textureIndex = index; }
+#endif
     enum EdgeEffectType {
         EdgeEffectTypeNone,
         EdgeEffectTypeTop,
@@ -342,6 +350,10 @@ private:
 #if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT)
     BitmapTexture* m_verticalEdgeEffectTexture;
     BitmapTexture* m_horizontalEdgeEffectTexture;
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+    BitmapTexture* m_edgeEffectTexture;
+    int m_textureIndex;
+#endif
     EdgeEffectType m_verticalEdgeEffectType;
     EdgeEffectType m_horizontalEdgeEffectType;
 #endif

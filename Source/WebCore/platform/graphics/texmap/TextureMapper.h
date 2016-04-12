@@ -218,6 +218,11 @@ public:
     bool fullScreenForVideoMode() { return m_fullScreenForVideoMode; }
 #endif
 
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+    virtual void enableEdgeEffect() = 0;
+    virtual void disableEdgeEffect() = 0;
+#endif
+
 protected:
     explicit TextureMapper(AccelerationMode);
 

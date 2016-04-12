@@ -143,6 +143,10 @@ void EdgeEffectAnimationController::showingTimerFired(Timer<EdgeEffectAnimationC
     }
 
     m_currentIndex++;
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+    m_currentLayer->setEdgeEffectTexture(m_owner->m_images[m_currentIndex-1].get());
+    m_currentLayer->setTextureIndex(m_currentIndex);
+#endif
     updateEffect(m_owner->m_images[m_currentIndex].get());
     m_owner->updateViewport();
 }
@@ -154,6 +158,9 @@ void EdgeEffectAnimationController::hidingTimerFired(Timer<EdgeEffectAnimationCo
         updateEffect(0);
         m_effectType = TextureMapperLayer::EdgeEffectTypeNone;
         timer->stop();
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+        m_owner->updateViewport();
+#endif
         return;
     }
 
@@ -210,16 +217,21 @@ EdgeEffectController::~EdgeEffectController()
     m_images.clear();
 }
 
-void EdgeEffectController::loadImages(TextureMapper* textureMapper)
+void EdgeEffectController::loadImage(TextureMapper* textureMapper, char* imageName)
 {
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+    RefPtr<SharedBuffer> buffer = SharedBuffer::createWithContentsOfFile(makeString(IMAGE_DIR, imageName));
+    if (buffer || !buffer->isEmpty()){
+#else
     if (!m_images.isEmpty())
         return;
 
     for (int i = 0; i < 10; ++i) {
-        RefPtr<SharedBuffer> buffer = SharedBuffer::createWithContentsOfFile(makeString(IMAGE_DIR"bouncing_top_0", String::number(i), ".png"));
+        RefPtr<SharedBuffer> buffer = SharedBuffer::createWithContentsOfFile(makeString(IMAGE_DIR"bouncing_top_0",
+                                                                                        String::number(i), ".png"));
         if (!buffer || buffer->isEmpty())
             continue;
-
+#endif
         RefPtr<BitmapImage> image = BitmapImage::create();
         image->setData(buffer.release(), true);
         RefPtr<BitmapTexture> texture = textureMapper->createTexture();
@@ -229,6 +241,15 @@ void EdgeEffectController::loadImages(TextureMapper* textureMapper)
     }
 }
 
+void EdgeEffectController::loadImages(TextureMapper* textureMapper)
+{
+    if (!m_images.isEmpty())
+        return;
+
+    loadImage(textureMapper, "bouncing_top_edge.png");
+    for (int i = 1; i < 9 ; i++)
+        loadImage(textureMapper, "bouncing_top_glow.png");
+}
 void EdgeEffectController::updateViewport()
 {
     m_owner->updateViewport();

@@ -69,6 +69,11 @@ public:
         return m_currentSurface ? static_cast<BitmapTextureImageBuffer*>(m_currentSurface.get())->graphicsContext() : graphicsContext();
     }
 
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+    virtual void enableEdgeEffect() OVERRIDE;
+    virtual void disableEdgeEffect() OVERRIDE;
+#endif
+
 private:
     TextureMapperImageBuffer()
         : TextureMapper(SoftwareMode)

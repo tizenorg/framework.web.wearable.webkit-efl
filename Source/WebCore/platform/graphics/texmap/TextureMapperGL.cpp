@@ -288,6 +288,10 @@ TextureMapperGL::TextureMapperGL()
 #else
     m_context3D = GraphicsContext3D::createForCurrentGLContext();
 #endif
+
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+    m_applyEdgeEffect = false;
+#endif
     m_data = new TextureMapperGLData(m_context3D.get());
 }
 
@@ -615,6 +619,10 @@ void TextureMapperGL::drawTexture(Platform3DObject texture, Flags flags, const I
     TextureMapperShaderProgram::Options options = TextureMapperShaderProgram::Texture;
     if (useRect)
         options |= TextureMapperShaderProgram::Rect;
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+    if (m_applyEdgeEffect)
+        options |= TextureMapperShaderProgram::SolidColor;
+#endif
     if (opacity < 1)
         options |= TextureMapperShaderProgram::Opacity;
     if (useAntialiasing) {
@@ -806,6 +814,11 @@ void TextureMapperGL::drawTexturedQuadWithProgram(TextureMapperShaderProgram* pr
     if (opacity < 1)
         flags |= ShouldBlend;
 
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+    if(m_applyEdgeEffect)
+        m_context3D->uniform4f(program->colorLocation(), 55.0 / 255.0, 161.0 / 255.0, 237.0 / 255.0, opacity);
+#endif
+
     draw(rect, modelViewMatrix, program, GraphicsContext3D::TRIANGLE_FAN, flags);
     m_context3D->texParameteri(GraphicsContext3D::TEXTURE_2D, GraphicsContext3D::TEXTURE_WRAP_S, GraphicsContext3D::CLAMP_TO_EDGE);
     m_context3D->texParameteri(GraphicsContext3D::TEXTURE_2D, GraphicsContext3D::TEXTURE_WRAP_T, GraphicsContext3D::CLAMP_TO_EDGE);
@@ -975,6 +988,18 @@ void BitmapTextureGL::updateContents(Image* image, const IntRect& targetRect, co
 
     updateContents(imageData, targetRect, offset, bytesPerLine, updateContentsFlag);
 }
+
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+void TextureMapperGL::enableEdgeEffect()
+{
+     m_applyEdgeEffect = true;
+}
+
+void TextureMapperGL::disableEdgeEffect()
+{
+     m_applyEdgeEffect = false;
+}
+#endif
 
 #if ENABLE(CSS_SHADERS)
 void TextureMapperGL::removeCachedCustomFilterProgram(CustomFilterProgram* program)

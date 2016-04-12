@@ -170,7 +170,11 @@ if (ENABLE_TIZEN_DRAG_SUPPORT)
 endif ()
 
 # Install edge effect images.
-FILE(GLOB EDGE_EFFECT_IMAGES "${WEBKIT2_DIR}/UIProcess/API/efl/tizen/images/overscrolling/bouncing_top_0*.png")
+if (ENABLE_TIZEN_CIRCLE_DISPLAY)
+     FILE(GLOB EDGE_EFFECT_IMAGES "${WEBKIT2_DIR}/UIProcess/API/efl/tizen/images/overscrolling/bouncing_top_*.png")
+else()
+     FILE(GLOB EDGE_EFFECT_IMAGES "${WEBKIT2_DIR}/UIProcess/API/efl/tizen/images/overscrolling/bouncing_top_0*.png")
+endif ()
 INSTALL(FILES ${EDGE_EFFECT_IMAGES}
     DESTINATION share/${WebKit2_OUTPUT_NAME}-${PROJECT_VERSION_MAJOR}/images)
 

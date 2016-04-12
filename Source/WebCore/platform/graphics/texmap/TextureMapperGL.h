@@ -94,6 +94,12 @@ public:
     virtual PassRefPtr<PlatformSurfaceTexture> createPlatformSurfaceTexture(int, IntSize, bool);
 #endif
 
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+    bool m_applyEdgeEffect;
+    virtual void enableEdgeEffect() OVERRIDE;
+    virtual void disableEdgeEffect() OVERRIDE;
+#endif
+
 private:
     struct ClipState {
         IntRect scissorBox;

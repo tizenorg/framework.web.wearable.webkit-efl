@@ -52,6 +52,7 @@ public:
 private:
     friend class EdgeEffectAnimationController;
     void loadImages(TextureMapper*);
+    void loadImage(TextureMapper*, char*);
 
     CoordinatedGraphicsScene* m_owner;
     Vector<RefPtr<BitmapTexture> > m_images;

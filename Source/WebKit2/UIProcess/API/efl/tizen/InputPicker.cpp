@@ -210,21 +210,28 @@ void InputPicker::show(bool isTimeType, const char* value)
 
     m_layout = elm_layout_add(m_ewkView);
 #if ENABLE(TIZEN_CIRCLE_DISPLAY_INPUT)
-    elm_layout_file_set(m_layout, EDJE_DIR "/control.edj", "elm/datetime/circle");
+    elm_layout_theme_set(m_layout, "layout", "circle", "datetime");
+    if (isTimeType)
+        elm_object_part_text_set(m_layout, "elm.text", "Set time");
+    else
+        elm_object_part_text_set(m_layout, "elm.text", "Set date");
 #else
     elm_layout_file_set(m_layout, EDJE_DIR "/control.edj", "elm/datetime/default");
 #endif
     evas_object_resize(m_layout, width, height);
 
     evas_object_move(m_layout, 0, 0);
-    evas_object_show(m_layout);
 
     m_datetime = elm_datetime_add(m_layout);
 #if ENABLE(TIZEN_CIRCLE_DISPLAY_INPUT)
     Evas_Object *conform, *circle_genlist;
     Eext_Circle_Surface *circle_surface;
     conform = elm_conformant_add(m_ewkView);
+    evas_object_size_hint_weight_set(conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_resize(conform, width, height);
     circle_surface = eext_circle_surface_conformant_add(conform);
+    elm_object_content_set(conform, m_layout);
+    evas_object_show(conform);
 
     Evas_Object* circle_datetime;
     circle_datetime = eext_circle_object_datetime_add(m_datetime, circle_surface);
@@ -273,6 +280,7 @@ void InputPicker::show(bool isTimeType, const char* value)
     elm_object_text_set(btn, "Set");
     evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 #if ENABLE(TIZEN_CIRCLE_DISPLAY_INPUT)
+    elm_object_style_set(btn, "bottom");
     elm_object_part_content_set(m_layout, "elm.swallow.btn", btn);
 #else
     elm_object_part_content_set(m_layout, "btn2", btn);
@@ -282,6 +290,7 @@ void InputPicker::show(bool isTimeType, const char* value)
 #if ENABLE(TIZEN_HW_MORE_BACK_KEY)
     ea_object_event_callback_add(m_layout, EA_CALLBACK_BACK, canceledCallback, this);
 #endif
+    evas_object_show(m_layout);
 
 }
 

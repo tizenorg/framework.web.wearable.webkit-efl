@@ -874,21 +874,43 @@ void TextureMapperLayer::paintEdgeEffectIfNeeded(const TextureMapperPaintOptions
         TransformationMatrix transform;
         transform.translate(clipRect.x(), clipRect.y());
         FloatSize textureSize = m_verticalEdgeEffectTexture->size();
-
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+        options.textureMapper->enableEdgeEffect();
+#endif
         switch (m_verticalEdgeEffectType) {
         case EdgeEffectTypeTop:
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            transform.translate(0, m_textureIndex - 8);
+#endif
             transform.scale(clipRect.width() / textureSize.width());
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            options.textureMapper->drawTexture(*m_verticalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 0.7, 0);
+            options.textureMapper->drawTexture(*m_edgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#else
             options.textureMapper->drawTexture(*m_verticalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#endif
             break;
         case EdgeEffectTypeBottom:
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            transform.translate(0, clipRect.height() - m_textureIndex + 8);
+#else
             transform.translate(0, clipRect.height());
+#endif
             transform.flipY();
             transform.scale(clipRect.width() / textureSize.width());
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            options.textureMapper->drawTexture(*m_verticalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 0.7, 0);
+            options.textureMapper->drawTexture(*m_edgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#else
             options.textureMapper->drawTexture(*m_verticalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#endif
             break;
         default:
             break;
         }
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+        options.textureMapper->disableEdgeEffect();
+#endif
     }
 
     if (m_horizontalEdgeEffectTexture) {
@@ -896,23 +918,46 @@ void TextureMapperLayer::paintEdgeEffectIfNeeded(const TextureMapperPaintOptions
         TransformationMatrix transform;
         transform.translate(clipRect.x(), clipRect.y());
         FloatSize textureSize = m_horizontalEdgeEffectTexture->size();
-
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+        options.textureMapper->enableEdgeEffect();
+#endif
         switch (m_horizontalEdgeEffectType) {
         case EdgeEffectTypeLeft:
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            transform.translate(0 + m_textureIndex - 8, clipRect.height());
+#else
             transform.translate(0, clipRect.height());
+#endif
             transform.rotate3d(0.0, 0.0, 1.0, -90);
             transform.scale(clipRect.height() / textureSize.width());
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            options.textureMapper->drawTexture(*m_horizontalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 0.7, 0);
+            options.textureMapper->drawTexture(*m_edgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#else
             options.textureMapper->drawTexture(*m_horizontalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#endif
             break;
         case EdgeEffectTypeRight:
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            transform.translate(clipRect.width() - m_textureIndex + 8 , 0);
+#else
             transform.translate(clipRect.width(), 0);
+#endif
             transform.rotate3d(0.0, 0.0, 1.0, 90);
             transform.scale(clipRect.height() / textureSize.width());
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+            options.textureMapper->drawTexture(*m_horizontalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 0.7, 0);
+            options.textureMapper->drawTexture(*m_edgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#else
             options.textureMapper->drawTexture(*m_horizontalEdgeEffectTexture, FloatRect(FloatPoint(), textureSize), transform, 1.0, 0);
+#endif
             break;
         default:
             break;
         }
+#if ENABLE(TIZEN_CIRCLE_DISPLAY)
+        options.textureMapper->disableEdgeEffect();
+#endif
     }
 }
 #endif // #if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT)

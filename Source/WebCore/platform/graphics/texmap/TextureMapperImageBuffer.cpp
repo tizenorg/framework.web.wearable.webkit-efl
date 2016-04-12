@@ -162,6 +162,19 @@ void TextureMapperImageBuffer::drawNumber(int /* number */, const Color&, const 
     notImplemented();
 }
 
+#if ENABLE(TIZEN_SCROLL_SCROLLABLE_AREA) && ENABLE(TIZEN_EDGE_EFFECT) && ENABLE(TIZEN_CIRCLE_DISPLAY)
+void TextureMapperImageBuffer::enableEdgeEffect()
+{
+    notImplemented();
+}
+
+void TextureMapperImageBuffer::disableEdgeEffect()
+{
+    notImplemented();
+}
+#endif
+
+
 #if ENABLE(CSS_FILTERS)
 PassRefPtr<BitmapTexture> BitmapTextureImageBuffer::applyFilters(TextureMapper*, const FilterOperations&)
 {
